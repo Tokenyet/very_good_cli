@@ -63,6 +63,15 @@ class TestCommand extends Command<int> {
         help: 'Run only tests that do not have the specified tags.',
       )
       ..addOption(
+        'tags',
+        abbr: 't',
+        help: 'Run only tests that have the specified tags.',
+      )
+      ..addFlag(
+        'j1',
+        help: 'concurrency',
+      )
+      ..addOption(
         'min-coverage',
         help: 'Whether to enforce a minimum coverage percentage.',
       )
@@ -114,6 +123,8 @@ This command should be run from the root of your Flutter project.''',
     final randomOrderingSeed =
         _argResults['test-randomize-ordering-seed'] as String?;
     final optimizePerformance = _argResults['optimization'] as bool;
+    final concurrency = _argResults['j1'] as bool;
+    final tags = _argResults['tags'] as String?;
 
     if (isFlutterInstalled) {
       try {
@@ -133,6 +144,8 @@ This command should be run from the root of your Flutter project.''',
               randomOrderingSeed
             ],
             '--no-pub',
+            if (concurrency) '-j1',
+            if (tags != null) ...['-t', tags],
             ..._argResults.rest,
           ],
         );
